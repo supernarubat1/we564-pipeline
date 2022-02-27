@@ -11,7 +11,6 @@ env:
   REGISTRY: "acrwe564.azurecr.io"
   IMAGE_TAG: "0.0.1-SNAPSHOT"
   SUBSCRIPTION_ID: "83fc51d8-c469-4f73-bc8a-9f58e0a02120"
-  MONGO_CON_STR_POD: "mongodb://we564-cosmos-db:7HtDR7RwbTnxnmE8z13a2SQUUPt3bHHCNl5CSJzFkgtfVGymztKdPeEYRUggXdfZJ1WvC6EYf5MfLBbfCEBHOQ==@we564-cosmos-db.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@we564-cosmos-db@"
 
 jobs:
   build:
@@ -45,7 +44,7 @@ jobs:
             [
               {
                 "name": "MONGO_CON_STR_POD",
-                "value": ${{ env.MONGO_CON_STR_POD }},
+                "value": ${{ secrets.MONGO_CON_STR_POD }},
                 "slotSetting": false
               }
             ]

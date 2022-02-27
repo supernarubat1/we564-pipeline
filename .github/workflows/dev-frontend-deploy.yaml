@@ -11,7 +11,6 @@ env:
   REGISTRY: "acrwe564.azurecr.io"
   IMAGE_TAG: "0.0.1-SNAPSHOT"
   SUBSCRIPTION_ID: "83fc51d8-c469-4f73-bc8a-9f58e0a02120"
-  REACTA_APP_API: "https://we564-backend.azurewebsites.net/api"
 
 jobs:
   build:
@@ -45,7 +44,7 @@ jobs:
             [
               {
                 "name": "REACTA_APP_API",
-                "value": ${{ env.REACTA_APP_API }},
+                "value": ${{ secrets.REACTA_APP_API }},
                 "slotSetting": false
               }
             ]
