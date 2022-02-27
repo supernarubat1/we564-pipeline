@@ -44,7 +44,7 @@ jobs:
             [
               {
                 "name": "REACTA_APP_API",
-                "value": ${{ secrets.REACTA_APP_API }},
+                "value": "https://we564-backend.azurewebsites.net/api",
                 "slotSetting": false
               }
             ]

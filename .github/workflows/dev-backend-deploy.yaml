@@ -44,7 +44,7 @@ jobs:
             [
               {
                 "name": "MONGO_CON_STR_POD",
-                "value": ${{ secrets.MONGO_CON_STR_POD }},
+                "value": "mongodb://we564-cosmos-db:7HtDR7RwbTnxnmE8z13a2SQUUPt3bHHCNl5CSJzFkgtfVGymztKdPeEYRUggXdfZJ1WvC6EYf5MfLBbfCEBHOQ==@we564-cosmos-db.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@we564-cosmos-db@",
                 "slotSetting": false
               }
             ]
