@@ -1,0 +1,51 @@
+name: Dev - Frontend Auto Deploy
+
+on:
+  repository_dispatch:
+    types: [we564-frontend-cd-dev]
+  workflow_dispatch:
+
+env:
+  REPOSITORY: "supernarubat1/we564-frontend"
+  APP_NAME: we564-frontend
+  REGISTRY: "acrwe564.azurecr.io"
+  IMAGE_TAG: "0.0.1-SNAPSHOT"
+  SUBSCRIPTION_ID: "83fc51d8-c469-4f73-bc8a-9f58e0a02120"
+  REACTA_APP_API: "https://we564-backend.azurewebsites.net/api"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2.4.0
+
+      - name: "Login Azure"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
+          allow-no-subscriptions: true
+
+      - name: "Set subscription"
+        run: az account set --subscription ${{ env.SUBSCRIPTION_ID }}
+
+      - name: "Deploy to Azure WebApp"
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APP_NAME }}
+          images: "${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{env.IMAGE_TAG}}"
+
+      - name: Set Web App Settings
+        uses: Azure/appservice-settings@v1
+        with:
+          app-name: ${{ env.APP_NAME }}
+          app-settings-json: |
+            [
+              {
+                "name": "REACTA_APP_API",
+                "value": ${{ env.REACTA_APP_API }},
+                "slotSetting": false
+              }
+            ]

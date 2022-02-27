@@ -1,0 +1,51 @@
+name: Dev - Backend Auto Deploy
+
+on:
+  repository_dispatch:
+    types: [we564-backend-cd-dev]
+  workflow_dispatch:
+
+env:
+  REPOSITORY: "supernarubat1/we564-backend"
+  APP_NAME: we564-backend
+  REGISTRY: "acrwe564.azurecr.io"
+  IMAGE_TAG: "0.0.1-SNAPSHOT"
+  SUBSCRIPTION_ID: "83fc51d8-c469-4f73-bc8a-9f58e0a02120"
+  MONGO_CON_STR_POD: "mongodb://we564-cosmos-db:7HtDR7RwbTnxnmE8z13a2SQUUPt3bHHCNl5CSJzFkgtfVGymztKdPeEYRUggXdfZJ1WvC6EYf5MfLBbfCEBHOQ==@we564-cosmos-db.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@we564-cosmos-db@"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: "Login Azure"
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_RBAC_CREDENTIALS }}
+          allow-no-subscriptions: true
+
+      - name: "Set subscription"
+        run: az account set --subscription ${{ env.SUBSCRIPTION_ID }}
+
+      - name: "Deploy to Azure WebApp"
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APP_NAME }}
+          images: "${{ env.REGISTRY }}/${{ env.APP_NAME }}:${{env.IMAGE_TAG}}"
+
+      - name: Set Web App Settings
+        uses: Azure/appservice-settings@v1
+        with:
+          app-name: ${{ env.APP_NAME }}
+          app-settings-json: |
+            [
+              {
+                "name": "MONGO_CON_STR_POD",
+                "value": ${{ env.MONGO_CON_STR_POD }},
+                "slotSetting": false
+              }
+            ]
